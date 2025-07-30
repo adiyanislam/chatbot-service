@@ -1,0 +1,29 @@
+# docker-compose.yml
+
+version: '3.8' # Specifies the version of the Docker Compose file format
+
+services:
+  # This defines our PostgreSQL database service
+  db:
+    # We use a specific image that comes pre-packaged with PostgreSQL 16 and pgvector
+    image: pgvector/pgvector:pg16
+    # This ensures the container restarts automatically if it ever stops
+    restart: always
+    # These are the environment variables for the database
+    # IMPORTANT: For a real project, you would use a .env file for secrets
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: dija_ai_db
+    # This maps port 5432 inside the container to port 5432 on your local machine
+    # so your Node.js app can connect to it.
+    ports:
+      - '5433:5432'
+    # This creates a "volume" to store the database data. It ensures your data
+    # persists even if you stop or remove the container.
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+# This defines the named volume we referenced above
+volumes:
+  postgres_data:
