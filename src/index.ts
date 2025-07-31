@@ -1,42 +1,20 @@
 // src/index.ts
-// src/index.ts
+import express from 'express';
+import { webhookRouter } from './routes/webhook'; // We will create this next
 
-import { Client } from 'pg';
-
-// This function will contain our application's logic
 const start = async () => {
-  console.log('Attempting to connect to the database...');
+  const app = express();
 
-  // Create a new client instance
-  // These are the same credentials from your docker-compose.yml file
-  const client = new Client({
-    host: 'localhost',
-    port: 5433,
-    user: 'myuser',
-    password: 'mypassword',
-    database: 'dija_ai_db',
+  // This is crucial for Express to be able to read the JSON body of the request
+  app.use(express.json());
+
+  // Tell our app to use the new router we're about to create
+  app.use(webhookRouter);
+
+  const PORT = 3000; // A standard port for a local web server
+  app.listen(PORT, () => {
+    console.log(`AI service listening on port ${PORT}`);
   });
-
-  try {
-    // Try to connect to the database
-    await client.connect();
-    console.log('Connected to database successfully!');
-
-    // You can run a simple query here to test
-    const res = await client.query('SELECT NOW()');
-    console.log('Current time from DB:', res.rows[0].now);
-
-    // --- Your future application logic will go here ---
-
-  } catch (error) {
-    // If connection fails, log the error
-    console.error('Failed to connect to the database:', error);
-  } finally {
-    // Always close the connection when the application is done
-    await client.end();
-    console.log('Database connection closed.');
-  }
 };
 
-// Run the application
 start();
