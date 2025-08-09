@@ -2,15 +2,16 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { webhookRouter } from './routes/webhook';
+import { chatRouter } from './routes/chat'; 
 
-// Load environment variables from .env file
-// This should be at the very top, before you use any environment variables
 dotenv.config();
 
 const start = async () => {
   const app = express();
   app.use(express.json());
+
   app.use(webhookRouter);
+  app.use(chatRouter); 
 
   const PORT = 3000;
   app.listen(PORT, () => {
