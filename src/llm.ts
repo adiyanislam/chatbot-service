@@ -32,7 +32,7 @@ export const generateAnswer = async (question: string, contextChunks: string[]):
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'phi3',
+        model: 'mistral',
         messages: [{ role: 'user', content: prompt }],
         stream: false,
       }),
