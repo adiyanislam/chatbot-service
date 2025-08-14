@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "db:setup": "docker exec -i dija-ai-service-db-1 psql -U myuser -d dija_ai_db < db/schema.sql",
-    "db:backfill": "ts-node scripts/backfill.ts"
+    "db:backfill": "ts-node scripts/backfill.ts",
+    "test:ai": "ts-node scripts/evaluate.ts",
+    "analyze:ai": "ts-node scripts/analyze.ts",
+    "db:reset-evals": "docker exec -i dija-ai-service-db-1 psql -U myuser -d dija_ai_db -c \"TRUNCATE TABLE evaluation_results RESTART IDENTITY;\""
   },
   "keywords": [],
   "author": "",
@@ -31,6 +34,7 @@
     "express": "^5.1.0",
     "graphql-tag": "^2.12.6",
     "langchain": "^0.3.30",
+    "ollama-node": "^0.1.28",
     "pg": "^8.16.3",
     "pgvector": "^0.2.1"
   }
