@@ -62,7 +62,7 @@ const checkAnswerAccuracy = async (context: string, answer: string): Promise<{ i
 
     const response = await fetch('http://localhost:11434/api/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'mistral', messages: [{ role: 'user', content: prompt }], stream: false, format: 'json' }),
+        body: JSON.stringify({ model: 'deepseek-llm', messages: [{ role: 'user', content: prompt }], stream: false, format: 'json' }),
     });
     const data = await response.json();
     try {

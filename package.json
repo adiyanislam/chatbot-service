@@ -29,6 +29,7 @@
     "@hygraph/utils": "^1.2.1",
     "@urql/core": "^5.2.0",
     "@xenova/transformers": "^2.17.2",
+    "autoconf": "^1.2.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
