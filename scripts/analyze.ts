@@ -1,5 +1,5 @@
 // scripts/analyze.ts
-import { Pool as AnalysisPool } from 'pg'; // Use alias to avoid name conflict
+import { Pool as AnalysisPool } from 'pg'; 
 
 const analysisPool = new AnalysisPool({
   host: 'localhost', port: 5433, user: 'myuser', password: 'mypassword', database: 'dija_ai_db',

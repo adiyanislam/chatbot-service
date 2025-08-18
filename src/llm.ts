@@ -7,12 +7,21 @@
  * @returns The generated answer from the AI model.
  */
 export const generateAnswer = async (question: string, contextChunks: string[]): Promise<string> => {
-  // 1. Construct the prompt
   const context = contextChunks.join('\n\n---\n\n');
-  const prompt = `You are a helpful financial education assistant for an app called Dija. 
-      Answer the user's question based ONLY on the provided context below. 
-      Do not use any outside knowledge. If the context does not contain the answer, say "I do not have enough information to answer that question."
-      Do not provide any financial advice. Frame your answer as an educational summary.
+
+  // --- NEW, IMPROVED TWO-STEP PROMPT ---
+  const prompt = `You are an AI assistant for Dija, a financial education app. Your persona is friendly, helpful, and concise. You will follow a strict two-step process to ensure accuracy.
+
+      **Step 1: Draft an Answer**
+      First, draft a friendly and concise answer to the "USER'S QUESTION" using ONLY the information provided in the "CONTEXT".
+
+      **Step 2: Final Review**
+      Before providing your final answer, you MUST review your draft against the following rules:
+      - **Rule 1 (No Outside Info):** Does my answer contain ANY information not explicitly present in the CONTEXT? If yes, I must delete that information.
+      - **Rule 2 (Handle Insufficient Context):** If the CONTEXT was empty, irrelevant, or did not contain the necessary information, does my answer consist ONLY of the exact sentence: "That's a great question, but I don't have enough information to answer it right now."? If no, I must replace my answer with that exact sentence.
+      - **Rule 3 (Conciseness):** Is my answer short, to the point, and easy to understand? If not, I must simplify it.
+
+      After reviewing, provide only the final, approved answer.
 
       CONTEXT:
       ${context}
@@ -20,11 +29,10 @@ export const generateAnswer = async (question: string, contextChunks: string[]):
       USER'S QUESTION:
       ${question}
 
-      ANSWER:`;
+      FINAL ANSWER:`;
 
   console.log('--- Sending Prompt to LLM ---');
 
-  // 2. Make a direct API call to the Ollama server using fetch
   try {
     const response = await fetch('http://localhost:11434/api/chat', {
       method: 'POST',
@@ -32,7 +40,7 @@ export const generateAnswer = async (question: string, contextChunks: string[]):
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'mistral',
+        model: 'phi3', // Sticking with phi3
         messages: [{ role: 'user', content: prompt }],
         stream: false,
       }),
@@ -49,8 +57,9 @@ export const generateAnswer = async (question: string, contextChunks: string[]):
     console.log('----------------------------------');
 
     return responseData.message.content;
+
   } catch (error) {
     console.error('Failed to communicate with Ollama server:', error);
-    throw error; // Re-throw the error to be handled by the chat endpoint
+    throw error;
   }
 };
