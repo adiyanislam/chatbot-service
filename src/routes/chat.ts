@@ -22,14 +22,16 @@ router.post('/api/v1/chat', async (req: Request, res: Response) => {
     const contextChunks = await findRelevantChunks(queryEmbedding);
     if (contextChunks.length === 0) {
       console.log('No relevant context found in the database.');
-      // Optional: You could have a default response here, but for now, we'll let the LLM handle it.
     }
 
     // 4. Generate an answer using the LLM with the retrieved context
     const answer = await generateAnswer(question, contextChunks);
 
-    // 5. Send the final answer back to the user
-    res.status(200).send({ answer });
+    // 5. Send the final answer AND the context back to the user
+    res.status(200).send({ 
+        answer: answer,
+        context: contextChunks 
+    });
 
   } catch (error) {
     console.error('An error occurred in the chat endpoint:', error);

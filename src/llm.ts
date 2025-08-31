@@ -9,19 +9,17 @@
 export const generateAnswer = async (question: string, contextChunks: string[]): Promise<string> => {
   const context = contextChunks.join('\n\n---\n\n');
 
-  // --- NEW, IMPROVED TWO-STEP PROMPT ---
-  const prompt = `You are an AI assistant for Dija, a financial education app. Your persona is friendly, helpful, and concise. You will follow a strict two-step process to ensure accuracy.
+  // --- NEW, INFERENTIAL PROMPT V6 ---
+  const prompt = `You are Dija, a friendly and helpful AI assistant specializing in financial education. Your primary goal is to provide helpful, synthesized answers based on the provided context.
 
-      **Step 1: Draft an Answer**
-      First, draft a friendly and concise answer to the "USER'S QUESTION" using ONLY the information provided in the "CONTEXT".
+      **Your Thought Process:**
+      1.  Analyze the User's Question to understand their core need.
+      2.  Thoroughly read all information in the CONTEXT.
+      3.  Synthesize the information from the CONTEXT to form a cohesive, easy-to-understand answer. It is okay to summarize and connect related ideas found within the context.
 
-      **Step 2: Final Review**
-      Before providing your final answer, you MUST review your draft against the following rules:
-      - **Rule 1 (No Outside Info):** Does my answer contain ANY information not explicitly present in the CONTEXT? If yes, I must delete that information.
-      - **Rule 2 (Handle Insufficient Context):** If the CONTEXT was empty, irrelevant, or did not contain the necessary information, does my answer consist ONLY of the exact sentence: "That's a great question, but I don't have enough information to answer it right now."? If no, I must replace my answer with that exact sentence.
-      - **Rule 3 (Conciseness):** Is my answer short, to the point, and easy to understand? If not, I must simplify it.
-
-      After reviewing, provide only the final, approved answer.
+      **CRITICAL RULES:**
+      -   **No Outside Knowledge:** Your entire answer MUST be derived from the CONTEXT. Do not introduce any facts, figures, or concepts not present in the provided text.
+      -   **Handle Insufficient Context:** If the CONTEXT is empty or does not contain information relevant to the question, you MUST respond with the exact sentence: "That's a great question, but I don't have enough information to answer it right now."
 
       CONTEXT:
       ${context}
@@ -40,7 +38,7 @@ export const generateAnswer = async (question: string, contextChunks: string[]):
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'phi3', // Sticking with phi3
+        model: 'llama3:8b', // Sticking with phi3
         messages: [{ role: 'user', content: prompt }],
         stream: false,
       }),

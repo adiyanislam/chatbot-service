@@ -14,7 +14,7 @@ const pool = new Pool({
 });
 
 // Here we define the model we're testing and how many tests to run.
-const MODEL_BEING_TESTED = 'phi3';
+const MODEL_BEING_TESTED = 'llama3:8b';
 const NUMBER_OF_TESTS = 20;
 
 /**
